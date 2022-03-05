@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- displays site properly based on user's device -->
+
+    <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png">
+    <link href="style.css" rel="stylesheet">
+
+    <title>Frontend Mentor | Todo app</title>
+
+    <!-- Feel free to remove these styles or customise in your own stylesheet 👍 -->
+    <style>
+
+
+        .attribution {
+            font-size: 11px;
+            text-align: center;
+        }
+
+        .attribution a {
+            color: hsl(228, 45%, 44%);
+        }
+    </style>
+</head>
+<body>
+<div class="bg-desktop" id="app">
+    <div class="w-1/3 mx-auto py-10 ">
+        <div class="flex justify-between place-items-center ">
+            <p class="font-semibold tracking-large uppercase text-4xl text-white"> Todo</p>
+            <img src="images/icon-moon.svg">
+        </div>
+        <input v-model="newTodo" @keyup.enter="addTodo" name="input" type="text"
+               class="w-full mt-10 mb-6 h-14 rounded-lg  p-8"
+               placeholder="Currently Typing">
+        <ul class="p-4 bg-white rounded-lg">
+            <li class="border-b w-full py-2 flex place-items-center" v-for="todo in filteredTodo" :key="todo.id"><label
+                    class="w-full flex">
+                <input type="checkbox" class="appearance-none" v-model="todo.done">
+                <span class="checkmark flex justify-center place-items-center mr-4"></span>
+                <span :class="{ done: todo.done }" class="cursor-pointer">{{todo.text}}</span> </label>
+                <button @click="removeTodo(todo)" :class="{ none: todo.done }" class="text-gray-500">X</button>
+            </li>
+            <div class="flex justify-between py-2">
+                <!-- Add dynamic number --> <p class="text-gray-400">{{count}} items left</p>
+                <p @click="all" class="text-gray-500 hover:text-gray-700 cursor-pointer font-bold"> All</p>
+                <p
+                   class="text-gray-500 hover:text-gray-700 cursor-pointer font-bold">Active</p>
+                <p @click="hideCompleted = !hideCompleted"
+                   class="text-gray-500 hover:text-gray-700 cursor-pointer font-bold">
+                    Completed</p>
+
+                <p @click="clearCompleted" class="text-gray-400 font-bold hover:text-gray-600 cursor-pointer"> Clear
+                    Completed</p>
+            </div>
+
+            <!--
+                        Drag and drop to reorder list
+            -->
+        </ul>
+
+        <div class="attribution">
+            Challenge by <a href="https://www.frontendmentor.io?ref=challenge" target="_blank">Frontend Mentor</a>.
+            Coded by <a href="#">Your Name Here</a>.
+        </div>
+    </div>
+</div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+<script>
+    let id = 0
+    new
+    Vue({
+        el: '#app',
+        data() {
+            return {
+                count: 0,
+                newTodo: '',
+                hideCompleted: false,
+                active: false,
+                todos: []
+            }
+        },
+        computed: {
+            filteredTodo() {
+                return this.hideCompleted ? this.todos.filter((todos) => todos.done) : this.todos
+            },
+        },
+        methods: {
+            addTodo() {
+                this.todos.push({id: id++, text: this.newTodo, done: false})
+                this.newTodo = ''
+                this.count++
+            },
+            removeTodo(todo) {
+                this.todos = this.todos.filter((todos) => todos !== todo)
+                this.count--
+            },
+            all() {
+                this.hideCompleted = false
+            },
+            clearCompleted(todo) {
+                this.todos = this.todos.filter((todos) => !todos.done)
+            },
+        }
+    })
+</script>
+</html>
